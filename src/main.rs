@@ -5,6 +5,16 @@ extern crate simple_logger;
 use simple_logger::{SimpleLogger};
 use log::LevelFilter;
 
+pub mod structs{
+    pub mod auth;
+    pub mod comments;
+    pub mod posts;
+    pub mod categories;
+    pub mod user;
+    pub mod requests;
+    pub mod responses;
+    pub mod moderation;
+}
 
 #[derive(Serialize, Deserialize)]
 pub struct Request {
