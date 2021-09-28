@@ -8,6 +8,8 @@ pub mod ban{
         pub temp_time_end: u64, //this is -1 for perm bans
         pub temp_time_initial: u64, //this is -1 for perm bans
         pub cat_id: u64,//the id of the category
+        pub moderator_id: u64,
+        pub user_id: u64,
     }
 }
 pub mod mute{
@@ -20,6 +22,8 @@ pub mod mute{
         pub temp_time_end: u64, //this is -1 for perm bans
         pub temp_time_initial: u64, //this is -1 for perm bans
         pub cat_id: u64,
+        pub moderator_id: u64,
+        pub user_id: u64,
     }
 }
 pub mod global{
@@ -29,6 +33,8 @@ pub mod global{
         pub global_id: u64,
         pub is_disabled: bool, //is this account disabled
         pub is_ip_banned: bool, //are they ip banned
+        pub moderator_id: u64,
+        pub user_id: u64,
     }
 }
 

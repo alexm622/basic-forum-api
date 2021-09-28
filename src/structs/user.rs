@@ -5,7 +5,6 @@ pub mod user{
     pub struct User {
         pub id: u64,
         pub username: String,
-        pub discriminator: String,
         pub avatar: Option<String>,
         pub bot: bool,
         pub mfa_enabled: bool,

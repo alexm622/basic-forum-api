@@ -3,7 +3,7 @@ pub mod post{
     #[derive(Serialize, Deserialize, Debug, Clone)]
     pub struct Login{
         pub uname: String,
-        pub pwd_hash: String,
+        pub pwd: String,
     }
     #[derive(Serialize, Deserialize, Debug, Clone)]
     pub struct MFA{
@@ -29,6 +29,12 @@ pub mod post{
     pub struct Logout{ //this should log ip address
         pub uid: u64,
         pub user_token: String, 
+    }
+    #[derive(Serialize, Deserialize, Debug, Clone)]
+    pub struct NewUser{ //log ip addresses
+        pub username: String,
+        pub email: String,
+        pub passwd: String,
     }
 }
 
