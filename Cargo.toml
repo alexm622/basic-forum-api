@@ -17,4 +17,4 @@ trust-dns-resolver = "0.20.3"
 http = "0.2.4"
 rand = "0.8.4"
 mysql = "21.0.1"
-
+bcrypt = "0.10.1"

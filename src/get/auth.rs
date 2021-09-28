@@ -1,9 +1,9 @@
 pub mod login{
-    use actix_web::{ dev,web, HttpResponse};
-    use serde::{Serialize, Deserialize};
+    use actix_web::{web, HttpResponse};
     use crate::structs::requests::post::{Login, NewUser};
     use crate::structs::responses::post::{LoginResponse};
-
+    use crate::database::insert::insert;
+    use crate::structs::database::database;
     
 
     pub async fn login_handler(path: web::Path<Login>) -> HttpResponse {
@@ -31,8 +31,19 @@ pub mod login{
         log::info!{"email: {}", email};
         log::info!{"ip: {}", ip};
 
+        let newuser: database::NewUser = database::NewUser{
+            email: email,
+            pw: pw,
+            ip:ip,
+            username: uname
+        };
+
+        let out: String = insert::add_user(newuser).unwrap();
+
+
+
         
-        HttpResponse::Ok().json(LoginResponse {outcome: false,login_token: None, uid: None})
+        HttpResponse::Ok().json(LoginResponse {outcome: false,login_token: Some(out), uid: None})
         
 
     }

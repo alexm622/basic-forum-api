@@ -1,16 +1,10 @@
 pub mod login{
-    use crate::structs::responses::post::{LoginResponse,NewUser};
+    use crate::structs::responses::post::{LoginResponse};
 
     pub fn login() -> LoginResponse{
-        let mut response: LoginResponse =LoginResponse {outcome: false,login_token: None, uid: None};
+        let response: LoginResponse =LoginResponse {outcome: false,login_token: None, uid: None};
 
         response
-    }
-    pub fn createUser() -> NewUser{
-        let mut response: NewUser = NewUser {response_code: 0, outcome: false, uid: None, token: None};
-
-        response
-
     }
 }
 
@@ -19,14 +13,16 @@ pub mod create{
     use crate::structs::auth::auth::Auth;
     use crate::structs::user::user::User;
     use crate::structs::moderation::moderation::ModerationRecord;
+    use crate::database::insert::insert;
+    use bcrypt::{DEFAULT_COST, hash, verify};
 
-    pub fn createAuth(newuser: NewUser) -> Auth{
+    pub fn create_auth(newuser: NewUser) -> Auth{
         let mut auth: Auth = Auth{
             auth_id: 0, //this is generated automatically by mysql
             creation_ip: newuser.ip.clone(),
             last_ip: newuser.ip,
             email: newuser.email,
-            hash: "".to_owned(),
+            hash: hash_pw(newuser.pw),
             uname: newuser.username,
             last_change: 0,
             created: 0,
@@ -34,25 +30,28 @@ pub mod create{
             token_ip: None,
             token_date: None
         };
+
+        auth.auth_id = insert::add_auth(&auth).unwrap();
         auth
     }
 
-    pub fn createModRec(newuser: NewUser) -> ModerationRecord{
+    pub fn create_mod_rec() -> ModerationRecord{
         let mut modrec: ModerationRecord = ModerationRecord{
-            moderation_id:0, //something to generate this
+            moderation_id:0, //this is generated automatically by mysql
             bans:None,
             mutes:None,
             global_info:None,
             infraction_counter:0,
             global_infractions:0,
         };
+        modrec.moderation_id = insert::add_modrec().unwrap();
         modrec
 
     }
 
-    pub fn createUser(newuser: NewUser, aid: u64, mid: u64) -> User{
-        let mut user: User = User{
-            id: 0, //make something to get this
+    pub fn create_user(newuser: NewUser, aid: u64, mid: u64) -> User{
+        let user: User = User{
+            id: 0, //this is generated automatically by mysql
             username:newuser.username,
             avatar: None,
             bot:false,
@@ -65,5 +64,15 @@ pub mod create{
             moderation_id:mid,
         };
         user
+    }
+
+    pub fn hash_pw(pw: String) -> String{
+        let hashed = hash(pw, DEFAULT_COST).unwrap();
+        hashed
+    }
+
+    pub fn verify_pw(pw: String, hash: String) -> bool{
+        let valid = verify(pw, &hash).unwrap();
+        valid
     }
 }
