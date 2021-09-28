@@ -37,6 +37,7 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
     cfg.route("/posttest", web::post().to(post_test_handler));
 
     cfg.service(web::resource("/login&uname={uname}&pw={pw}").route(web::get().to(get::auth::login::login_handler)));
+    cfg.service(web::resource("/new&uname={uname}&pw={pw}&email={email}").route(web::get().to(get::auth::login::new_user_handler)));
     
     /*cfg.service(web::resource("/redis&key={key}").route(web::get().to(db_request_handlers::redis_get_handler)));
     cfg.service(web::resource("/spotify&token={token}").route(web::get().to(spotify_api::spotify_generic)));
@@ -58,8 +59,8 @@ pub async fn health_check_handler() ->  impl Responder {
 async fn main() -> std::io::Result<()> {
 
     SimpleLogger::new()
-    .with_level(LevelFilter::Off)
-    .with_module_level("rest", LevelFilter::Info)
+    .with_level(LevelFilter::Error)
+    .with_module_level("basic_forum_api", LevelFilter::Info)
     .with_module_level("actix", LevelFilter::Info)
     .init()
     .unwrap();

@@ -3,7 +3,7 @@ pub mod database{
     #[derive(Serialize, Deserialize, Debug, Clone)]
     pub struct NewUser{
         pub username: String,
-        pub hash: String,
+        pub pw: String,
         pub ip: String,
         pub email: String,
     }

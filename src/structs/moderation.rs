@@ -44,8 +44,8 @@ pub mod moderation{
     #[derive(Serialize, Deserialize, Debug, Clone)]
     pub struct ModerationRecord{
         pub moderation_id: u64, //the user's moderationid
-        pub bans: Option<Vec<u64>>, //the bans this user currently has
-        pub mutes: Option<Vec<u64>>, //the mutes this user has recieved
+        pub bans: Option<String>, //the bans this user currently has
+        pub mutes: Option<String>, //the mutes this user has recieved
         pub global_info: Option<u64>, //global moderation actions taken against this user
         pub infraction_counter: u64,
         pub global_infractions:u64,
