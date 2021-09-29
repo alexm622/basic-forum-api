@@ -8,6 +8,10 @@ use log::LevelFilter;
 pub mod auth{
     pub mod user;
 }
+pub mod post{
+    pub mod post;
+    pub mod auth;
+}
 pub mod database{
     pub mod insert;
     pub mod get;
@@ -24,7 +28,7 @@ pub mod structs{
     pub mod database;
 }
 pub mod get{
-    pub mod auth;
+    
 }
 
 #[derive(Serialize, Deserialize)]
@@ -34,12 +38,21 @@ pub struct Request {
 
 // Configure route
 pub fn general_routes(cfg: &mut web::ServiceConfig) {
+    //general purpose
     cfg.route("/health", web::get().to(health_check_handler));
     cfg.route("/posttest", web::post().to(post_test_handler));
 
-    cfg.service(web::resource("/login&uname={uname}&pw={pw}").route(web::get().to(get::auth::login::login_handler)));
-    cfg.service(web::resource("/new&uname={uname}&pw={pw}&email={email}").route(web::get().to(get::auth::login::new_user_handler)));
-    
+    //auth
+    cfg.service(web::resource("/login").route(web::post().to(post::auth::login::login_handler)));
+    cfg.service(web::resource("/newuser").route(web::post().to(post::auth::login::new_user_handler)));
+
+    //forum specific
+    cfg.service(web::resource("/newpost").route(web::post().to(post::post::post::make_post)));
+    cfg.service(web::resource("/newcategory").route(web::post().to(post::post::post::make_cat)));
+    cfg.service(web::resource("/newcomment").route(web::post().to(post::post::post::make_comment)));
+
+
+
     /*cfg.service(web::resource("/redis&key={key}").route(web::get().to(db_request_handlers::redis_get_handler)));
     cfg.service(web::resource("/spotify&token={token}").route(web::get().to(spotify_api::spotify_generic)));
     cfg.route("/next", web::post().to(spotify_api::next_track));*/
@@ -53,7 +66,7 @@ pub async fn post_test_handler (req: web::Json<Request>) -> HttpResponse {
  * 
  */
 pub async fn health_check_handler() ->  impl Responder {
-    HttpResponse::Ok().json("Rust Server is running properly")
+    HttpResponse::Ok().json("api server is running properly")
 }
 
 #[actix_rt::main]

@@ -7,25 +7,25 @@ pub mod login{
     use crate::auth::user::login;
     
 
-    pub async fn login_handler(path: web::Path<Login>,req: web::HttpRequest) -> HttpResponse {
+    pub async fn login_handler(json: web::Json<Login>,req: web::HttpRequest) -> HttpResponse {
         
         log::info!("login handler");
-        let uname = path.uname.clone();
-        let pw = path.pw.clone();
+        let uname = json.uname.clone();
+        let pw = json.pw.clone();
         let ip = req.connection_info().remote().unwrap().to_owned();
         log::info!("uname: {}", uname);
         log::info!("password: {}", pw);
 
-        let response:LoginResponse = login::login(path.into_inner(), ip);
+        let response:LoginResponse = login::login(json.into_inner(), ip);
 
         HttpResponse::Ok().json(response)
     }
-    pub async fn new_user_handler(path: web::Path<NewUser>,req: web::HttpRequest) -> HttpResponse {
+    pub async fn new_user_handler(json: web::Json<NewUser>,req: web::HttpRequest) -> HttpResponse {
         
         log::info!("new user handler");
-        let uname = path.uname.clone();
-        let pw = path.pw.clone();
-        let email = path.email.clone();
+        let uname = json.uname.clone();
+        let pw = json.pw.clone();
+        let email = json.email.clone();
         let ip = req.connection_info().remote().unwrap().to_owned();
         log::info!("uname: {}", uname);
         log::info!("password: {}", pw);
@@ -40,12 +40,7 @@ pub mod login{
         };
 
         let out: String = insert::add_user(newuser).unwrap();
-
-
-
         
         HttpResponse::Ok().json(LoginResponse {outcome: false,login_token: Some(out), uid: None})
-        
-
     }
 }

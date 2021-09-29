@@ -9,6 +9,13 @@ pub mod post{
         pub user_token: String,
     }
     #[derive(Serialize, Deserialize, Debug, Clone)]
+    pub struct MakeCat{
+        pub name: String,
+        pub desc: String,
+        pub user: u64,
+        pub user_token: String,
+    }
+    #[derive(Serialize, Deserialize, Debug, Clone)]
     pub struct MakeComment{
         pub cat: u64,
         pub post: u64,
