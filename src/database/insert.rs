@@ -8,7 +8,9 @@ pub mod insert{
     use crate::structs::user::user::User;
     use crate::auth::user::create;
 
-    pub const URL:&str = "mysql://server:serverpass@10.16.40.202:3306/forum";
+    use std::time::SystemTime;
+
+    const URL:&str = "mysql://server:serverpass@10.16.40.202:3306/forum";
 
     pub fn add_user(newuser: database::NewUser) -> Result<String>{//idk what this should be returning realistically
         let opts = Opts::from_url(URL).unwrap();
@@ -58,14 +60,18 @@ pub mod insert{
     }
 
     //insert a new token into the database for user with aid u64
-    pub fn add_token(token: String, aid: u64) -> Result<bool>{
+    pub fn add_token(token: String, aid: u64, ip: String) -> Result<bool>{
         let opts = Opts::from_url(URL).unwrap();
         let pool = Pool::new(opts).unwrap();
         let mut conn = pool.get_conn().unwrap();
-        let stmt = conn.prep("UPDATE auth SET active_token = :token WHERE auth_id = :aid")?;
+        let date = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
+        log::info!("adding token {} to auth for aid {}", token, aid);
+        let stmt = conn.prep("UPDATE auth SET active_token = :token, token_ip = :ip, token_date = :date WHERE auth_id = :aid")?;
         conn.exec_drop(&stmt, params!{
             "token" => token,
             "aid" => aid,
+            "ip" => ip,
+            "date" => date,
         },).unwrap();
         Ok(true)
     }

@@ -10,6 +10,7 @@ pub mod auth{
 }
 pub mod database{
     pub mod insert;
+    pub mod get;
 }
 pub mod structs{
     pub mod auth;

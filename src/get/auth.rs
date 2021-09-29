@@ -4,24 +4,25 @@ pub mod login{
     use crate::structs::responses::post::{LoginResponse};
     use crate::database::insert::insert;
     use crate::structs::database::database;
+    use crate::auth::user::login;
     
 
-    pub async fn login_handler(path: web::Path<Login>) -> HttpResponse {
+    pub async fn login_handler(path: web::Path<Login>,req: web::HttpRequest) -> HttpResponse {
         
         log::info!("login handler");
         let uname = path.uname.clone();
         let pw = path.pw.clone();
+        let ip = req.connection_info().remote().unwrap().to_owned();
         log::info!("uname: {}", uname);
         log::info!("password: {}", pw);
 
-        
-        HttpResponse::Ok().json(LoginResponse {outcome: false,login_token: None, uid: None})
-        
+        let response:LoginResponse = login::login(path.into_inner(), ip);
 
+        HttpResponse::Ok().json(response)
     }
     pub async fn new_user_handler(path: web::Path<NewUser>,req: web::HttpRequest) -> HttpResponse {
         
-        log::info!("redis get handler");
+        log::info!("new user handler");
         let uname = path.uname.clone();
         let pw = path.pw.clone();
         let email = path.email.clone();

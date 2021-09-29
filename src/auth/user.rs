@@ -1,9 +1,28 @@
 pub mod login{
     use crate::structs::responses::post::{LoginResponse};
+    use crate::structs::requests::post::Login;
+    use crate::auth::user::create;
+    use crate::database::get::get;
+    use crate::structs::database::database::IdInfo;
+    
 
-    pub fn login() -> LoginResponse{
-        let response: LoginResponse =LoginResponse {outcome: false,login_token: None, uid: None};
-
+    pub fn login(request: Login, ip:String) -> LoginResponse{
+        let mut response: LoginResponse =LoginResponse {outcome: false,login_token: None, uid: None};
+        
+        let id:IdInfo = get::get_id_info(request.uname).unwrap();
+        if id.aid == 0{
+            return response;
+        }
+        let mut newtoken:bool;
+        let mut token:String;
+        while{
+            token = create::generate_token(id.uid);
+            newtoken = get::check_token(token.clone(), id.aid, ip.clone()).unwrap();
+            newtoken != true
+        }{}
+        response.login_token = Some(token.clone());
+        response.outcome = true;
+        response.uid = Some(id.uid);
         response
     }
 }
@@ -66,6 +85,10 @@ pub mod create{
             moderation_id:mid,
         };
         user
+    }
+
+    pub fn create_token(){
+
     }
 
     pub fn hash_pw(pw: String) -> String{
