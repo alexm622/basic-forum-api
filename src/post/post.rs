@@ -2,12 +2,12 @@ pub mod post{
 
     use actix_web::{web, HttpResponse};
     
-    use crate::structs::requests::post::MakePost;
+    use crate::structs::requests::post::{MakePost,MakeCat,MakeComment};
     use crate::structs::responses::post::StatusResponse;
 
     
 
-    pub async fn make_cat(json: web::Json<MakePost>,req: web::HttpRequest) -> HttpResponse {
+    pub async fn make_cat(json: web::Json<MakeCat>,req: web::HttpRequest) -> HttpResponse {
             
         log::info!("make category");
         
@@ -27,7 +27,7 @@ pub mod post{
         HttpResponse::Ok().json("ok")
     }
 
-    pub async fn make_comment(json: web::Json<MakePost>,req: web::HttpRequest) -> HttpResponse {
+    pub async fn make_comment(json: web::Json<MakeComment>,req: web::HttpRequest) -> HttpResponse {
         
         log::info!("make comment");
         
