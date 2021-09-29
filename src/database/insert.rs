@@ -56,4 +56,17 @@ pub mod insert{
 
         Ok(conn.last_insert_id())
     }
+
+    //insert a new token into the database for user with aid u64
+    pub fn add_token(token: String, aid: u64) -> Result<bool>{
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+        let stmt = conn.prep("UPDATE auth SET active_token = :token WHERE auth_id = :aid")?;
+        conn.exec_drop(&stmt, params!{
+            "token" => token,
+            "aid" => aid,
+        },).unwrap();
+        Ok(true)
+    }
 }
