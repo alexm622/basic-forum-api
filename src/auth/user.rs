@@ -15,6 +15,8 @@ pub mod create{
     use crate::structs::moderation::moderation::ModerationRecord;
     use crate::database::insert::insert;
     use bcrypt::{DEFAULT_COST, hash, verify};
+    use std::time::SystemTime;
+    use sha256::digest;
 
     pub fn create_auth(newuser: NewUser) -> Auth{
         let mut auth: Auth = Auth{
@@ -74,5 +76,12 @@ pub mod create{
     pub fn verify_pw(pw: String, hash: String) -> bool{
         let valid = verify(pw, &hash).unwrap();
         valid
+    }
+
+    pub fn generate_token(uid: u64) -> String{
+        let time = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
+        let magic_number = uid + time;
+        let val = digest(magic_number.to_string());
+        val
     }
 }
