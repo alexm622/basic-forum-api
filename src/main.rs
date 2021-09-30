@@ -8,6 +8,9 @@ use log::LevelFilter;
 pub mod forum_actions{
     pub mod create;
 }
+pub mod utils{
+    pub mod ip_tools;
+}
 pub mod auth{
     pub mod user;
 }

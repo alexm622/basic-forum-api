@@ -8,6 +8,7 @@ pub mod insert{
     use crate::structs::user::user::User;
     use crate::auth::user::create;
     use crate::structs::requests::post::{MakeCat, MakeComment, MakePost};
+    use crate::utils::ip_tools::ip_tools;
 
     use std::time::SystemTime;
 
@@ -36,8 +37,8 @@ pub mod insert{
         let mut conn = pool.get_conn().unwrap();
         let stmt = conn.prep("INSERT INTO auth (creation_ip, last_ip, email, pwhash, uname, last_change, created) VALUES(:creation_ip, :last_ip, :email, :pwhash, :uname, :last_change, :created)")?;
         conn.exec_drop(&stmt, params!{
-            "creation_ip" => new_auth.creation_ip.clone(),
-            "last_ip" => new_auth.last_ip.clone(),
+            "creation_ip" => ip_tools::strip_port(new_auth.creation_ip.clone()),
+            "last_ip" => ip_tools::strip_port(new_auth.last_ip.clone()),
             "email" => new_auth.email.clone(),
             "pwhash" => new_auth.hash.clone(),
             "uname" => new_auth.uname.clone(),
@@ -71,7 +72,7 @@ pub mod insert{
         conn.exec_drop(&stmt, params!{
             "token" => token,
             "aid" => aid,
-            "ip" => ip,
+            "ip" => ip_tools::strip_port(ip),
             "date" => date,
         },).unwrap();
         Ok(true)
