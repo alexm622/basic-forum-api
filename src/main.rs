@@ -5,6 +5,9 @@ extern crate simple_logger;
 use simple_logger::{SimpleLogger};
 use log::LevelFilter;
 
+pub mod forum_actions{
+    pub mod create;
+}
 pub mod auth{
     pub mod user;
 }

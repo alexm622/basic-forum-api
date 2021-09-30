@@ -49,4 +49,31 @@ pub mod get{
         }
         
     }
+
+    pub fn verify_token(token:String, ip:String, uid_test:u64)-> Result<bool>{
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+        let mut stmt = conn.prep("SELECT auth_id FROM auth WHERE active_token = :token, ip = :ip")?;
+        let aid_vec:Vec<u64> = conn.exec(stmt, params!{
+            "token" => token.clone(),
+            "ip" => ip.clone(),
+        }).expect("Query failed.");
+        if aid_vec.len() != 0{
+            return Ok(false);
+        }
+        let aid:u64 = aid_vec[0];
+        stmt = conn.prep("SELECT user_id FROM users WHERE auth_id = :aid")?; 
+        let uid_vec:Vec<u64> = conn.exec(stmt, params!{
+            "aid" => aid,
+        }).expect("Query Failed");
+        if aid_vec.len() != 0{
+            return Ok(false);
+        }
+        let uid:u64 = uid_vec[0];
+        if uid == uid_test{
+            return Ok(true);
+        }
+        Ok(false)
+    }
 }

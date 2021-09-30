@@ -17,7 +17,7 @@ pub mod post{
     }
     #[derive(Serialize, Deserialize, Debug, Clone)]
     pub struct MakeComment{
-        pub cat: u64,
+        pub parent: u64,
         pub post: u64,
         pub contents: String,
         pub user: u64,

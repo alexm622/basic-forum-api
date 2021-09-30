@@ -7,6 +7,7 @@ pub mod insert{
     use crate::structs::moderation::moderation::ModerationRecord;
     use crate::structs::user::user::User;
     use crate::auth::user::create;
+    use crate::structs::requests::post::{MakeCat, MakeComment, MakePost};
 
     use std::time::SystemTime;
 
@@ -27,7 +28,7 @@ pub mod insert{
             "mod_id" => user.moderation_id,
         },).unwrap();
 
-        Ok("test".to_owned())
+        Ok("user added".to_owned())
     }
     pub fn add_auth(new_auth: &Auth) -> Result<u64>{
         let opts = Opts::from_url(URL).unwrap();
@@ -74,5 +75,55 @@ pub mod insert{
             "date" => date,
         },).unwrap();
         Ok(true)
+    }
+    pub fn create_cat(cat: MakeCat) -> Result<u64>{
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+        let date = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
+        log::info!("adding cat {} to categories for uid {}", cat.name.clone(), cat.user);
+        let stmt = conn.prep("INSERT INTO categories (creator_id, cat_name, cat_desc, creation_date) VALUES(:uid, :name, :desc, :date)")?;
+        conn.exec_drop(&stmt, params!{
+            "date" => date,
+            "desc" => cat.desc.clone(),
+            "uid" => cat.user,
+            "name" => cat.name.clone(),
+        },).unwrap();
+        let cat_id:u64 = conn.last_insert_id();
+        Ok(cat_id)
+    }
+    pub fn create_post(post: MakePost) -> Result<u64>{
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+        let date = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
+        log::info!("adding post {} to category {} for uid {}", post.name.clone(), post.cat, post.user);
+        let stmt = conn.prep("INSERT INTO posts (creator_id, cat_id, content, name, creation_date) VALUES(:uid, :cat_id, :content, :name, :date)")?;
+        conn.exec_drop(&stmt, params!{
+            "cat_id" => post.cat,
+            "date" => date,
+            "content" => post.contents.clone(),
+            "uid" => post.user,
+            "name" => post.name.clone(),
+        },).unwrap();
+        let post_id:u64 = conn.last_insert_id();
+        Ok(post_id)
+    }
+    pub fn create_comment(comment: MakeComment) -> Result<u64>{
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+        let date = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
+        log::info!("adding comment to post {} for uid {}", comment.post, comment.user);
+        let stmt = conn.prep("INSERT INTO comments (creator_id, post_id, parent_id, content, creation_date) VALUES(:uid, :post_id, :parent_id, :content, :date)")?;
+        conn.exec_drop(&stmt, params!{
+            "creator_id" => comment.user,
+            "date" => date,
+            "content" => comment.contents.clone(),
+            "uid" => comment.user,
+            "parent_id" => comment.parent,
+        },).unwrap();
+        let comment_id:u64 = conn.last_insert_id();
+        Ok(comment_id)
     }
 }

@@ -4,6 +4,7 @@ pub mod comment{
     pub struct Comment{
         pub id: u64,
         pub post_id: u64,
+        pub parent_id: u64,
         pub creator_id: u64,
         pub is_archived: bool,
         pub is_deleted: bool,
