@@ -24,11 +24,16 @@ pub mod create{
             redirect: None,
         };
         let good_token:bool = get::verify_token(req.user_token.clone(), ip, req.user).unwrap();
-        if good_token{
+        let exists:bool = get::cat_exists(req.name.clone()).unwrap();
+        if good_token & !exists{
             let cat_id:u64 = insert::create_cat(req).unwrap();
             res.redirect = Some(cat_id.to_string().to_owned());
         }else{
-            res.redirect = Some("bad token+ip combo".to_owned());
+            if good_token {
+                res.redirect = Some("exists".to_owned());
+            }else{
+                res.redirect = Some("bad token+ip combo".to_owned());
+            }
         }
         
         return res;

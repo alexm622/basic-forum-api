@@ -50,6 +50,62 @@ pub mod get{
         }
         
     }
+    pub fn check_cat(id:String) -> Result<bool>{
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+        let stmt = conn.prep("SELECT cat_id FROM categories WHERE cat_id = :id")?;
+        let res:Vec<u64> = conn.exec(stmt, params!{
+            "id" => id,
+        }).expect("Query failed.");
+        if res.len() == 0{
+            Ok(false)
+        }else{
+            Ok(true)
+        } 
+    }
+    pub fn cat_exists(name:String) -> Result<bool>{
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+        let stmt = conn.prep("SELECT cat_name FROM categories WHERE cat_name = :name")?;
+        let res:Vec<u64> = conn.exec(stmt, params!{
+            "name" => name,
+        }).expect("Query failed.");
+        if res.len() == 0{
+            Ok(false)
+        }else{
+            Ok(true)
+        } 
+    }
+    pub fn check_post(id:String) -> Result<bool>{
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+        let stmt = conn.prep("SELECT post_id FROM categories WHERE post_id = :id")?;
+        let res:Vec<u64> = conn.exec(stmt, params!{
+            "id" => id,
+        }).expect("Query failed.");
+        if res.len() == 0{
+            Ok(false)
+        }else{
+            Ok(true)
+        } 
+    }
+    pub fn check_comment(id:String) -> Result<bool>{
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+        let stmt = conn.prep("SELECT comment_id FROM categories WHERE comment_id = :id")?;
+        let res:Vec<u64> = conn.exec(stmt, params!{
+            "comment_id" => id,
+        }).expect("Query failed.");
+        if res.len() == 0{
+            Ok(false)
+        }else{
+            Ok(true)
+        } 
+    }
 
     pub fn  verify_token(token:String, ip:String, uid_test:u64)-> Result<bool>{
         let opts = Opts::from_url(URL).unwrap();
