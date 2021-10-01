@@ -5,21 +5,38 @@ pub mod login{
     use crate::database::get::get;
     use crate::structs::database::database::IdInfo;
     
-
+    //handle a login post request
     pub fn login(request: Login, ip:String) -> LoginResponse{
+        //create an empty login response
         let mut response: LoginResponse =LoginResponse {outcome: false,login_token: None, uid: None};
         
+        //get the id info for said username
         let id:IdInfo = get::get_id_info(request.uname).unwrap();
+        //if the auth id is zero (not exist) then the login failed
         if id.aid == 0{
             return response;
         }
+
+        //this doesnt verify password?
+        let hash:String = get::get_pw_hash(id.aid).unwrap();
+        let good_pw:bool = create::verify_pw(request.pw.clone(), hash);
+        if !good_pw{
+            return response;
+        }
+
+        //token and test to see if token does not exist already
         let mut newtoken:bool;
         let mut token:String;
+        //do while loop
         while{
+            //generate a new token
             token = create::generate_token(id.uid);
+            //check to see if the token is not a duplicate
             newtoken = get::check_token(token.clone(), id.aid, ip.clone()).unwrap();
+            //test to see if the token is original
             newtoken != true
         }{}
+        //respond with the proper information
         response.login_token = Some(token.clone());
         response.outcome = true;
         response.uid = Some(id.uid);
@@ -85,10 +102,6 @@ pub mod create{
             moderation_id:mid,
         };
         user
-    }
-
-    pub fn create_token(){
-
     }
 
     pub fn hash_pw(pw: String) -> String{

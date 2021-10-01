@@ -162,6 +162,27 @@ pub mod get{
         } 
     }
 
+    //check to see if comment with id exists
+    pub fn get_pw_hash(aid:u64) -> Result<String>{
+        //initialize connection
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+        
+        //prepare SQL query
+        let stmt = conn.prep("SELECT pwhash FROM auth WHERE auth_id = :aid")?;
+        let res:Vec<String> = conn.exec(stmt, params!{
+            "aid" => aid,
+        }).expect("Query failed.");
+
+        //if the authid does not exist return empty
+        if res.len() == 0{
+            return Ok("".to_owned());
+        }else{
+            return Ok(res[0].clone());
+        } 
+    }
+
     //verify a token for given ip address and uid
     pub fn  verify_token(token:String, ip:String, uid_test:u64)-> Result<bool>{
         //initialize connection
