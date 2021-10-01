@@ -57,11 +57,6 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(web::resource("/newcategory").route(web::post().to(post::post::post::make_cat)));
     cfg.service(web::resource("/newcomment").route(web::post().to(post::post::post::make_comment)));
 
-
-
-    /*cfg.service(web::resource("/redis&key={key}").route(web::get().to(db_request_handlers::redis_get_handler)));
-    cfg.service(web::resource("/spotify&token={token}").route(web::get().to(spotify_api::spotify_generic)));
-    cfg.route("/next", web::post().to(spotify_api::next_track));*/
 }
 
 //post request handler

@@ -53,7 +53,7 @@ pub mod create{
     use bcrypt::{DEFAULT_COST, hash, verify};
     use std::time::SystemTime;
     use sha256::digest;
-
+    //create an auth object
     pub fn create_auth(newuser: NewUser) -> Auth{
         let mut auth: Auth = Auth{
             auth_id: 0, //this is generated automatically by mysql
@@ -72,7 +72,7 @@ pub mod create{
         auth.auth_id = insert::add_auth(&auth).unwrap();
         auth
     }
-
+    //create a mod record object
     pub fn create_mod_rec() -> ModerationRecord{
         let mut modrec: ModerationRecord = ModerationRecord{
             moderation_id:0, //this is generated automatically by mysql
@@ -86,7 +86,7 @@ pub mod create{
         modrec
 
     }
-
+    //create a basic user object
     pub fn create_user(newuser: NewUser, aid: u64, mid: u64) -> User{
         let user: User = User{
             id: 0, //this is generated automatically by mysql
@@ -104,16 +104,19 @@ pub mod create{
         user
     }
 
+    //hash the password
     pub fn hash_pw(pw: String) -> String{
         let hashed = hash(pw, DEFAULT_COST).unwrap();
         hashed
     }
 
+    //check the password against the hash
     pub fn verify_pw(pw: String, hash: String) -> bool{
         let valid = verify(pw, &hash).unwrap();
         valid
     }
 
+    //create a new user token and return it
     pub fn generate_token(uid: u64) -> String{
         let time = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
         let magic_number = uid + time;
