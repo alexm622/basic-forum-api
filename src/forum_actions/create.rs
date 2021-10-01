@@ -9,11 +9,16 @@ pub mod create{
             redirect: None,
         };
         let good_token:bool = get::verify_token(req.user_token.clone(), ip, req.user).unwrap();
-        if good_token{
+        let good_parent:bool = get::check_cat(req.cat).unwrap();
+        if good_token & good_parent{
             let post_id = insert::create_post(req).unwrap();
         res.redirect = Some(post_id.to_string().to_owned());
         }else{
-            res.redirect = Some("bad token+ip combo".to_owned());
+            if good_token {
+                res.redirect = Some("exists".to_owned());
+            }else{
+                res.redirect = Some("bad token+ip combo".to_owned());
+            }
         }
         
         return res;
@@ -46,11 +51,21 @@ pub mod create{
         };
         
         let good_token:bool = get::verify_token(req.user_token.clone(), ip, req.user).unwrap();
-        if good_token{
+        let good_post:bool = get::check_post(req.post).unwrap();
+        let good_parent:bool = get::check_post(req.parent).unwrap();
+        if good_token & good_parent & good_post{
             let comment_id:u64 = insert::create_comment(req).unwrap();
             res.redirect = Some(comment_id.to_string().to_owned());
         }else{
-            res.redirect = Some("bad token+ip combo".to_owned());
+            if good_token {
+                if good_post{
+                    res.redirect = Some("bad parent".to_owned());
+                }else{
+                    res.redirect = Some("bad post".to_owned());
+                }
+            }else{
+                res.redirect = Some("bad token+ip combo".to_owned());
+            }
         }
         return res;
     }

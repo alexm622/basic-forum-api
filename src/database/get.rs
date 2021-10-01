@@ -50,7 +50,7 @@ pub mod get{
         }
         
     }
-    pub fn check_cat(id:String) -> Result<bool>{
+    pub fn check_cat(id:u64) -> Result<bool>{
         let opts = Opts::from_url(URL).unwrap();
         let pool = Pool::new(opts).unwrap();
         let mut conn = pool.get_conn().unwrap();
@@ -78,7 +78,7 @@ pub mod get{
             Ok(true)
         } 
     }
-    pub fn check_post(id:String) -> Result<bool>{
+    pub fn check_post(id:u64) -> Result<bool>{
         let opts = Opts::from_url(URL).unwrap();
         let pool = Pool::new(opts).unwrap();
         let mut conn = pool.get_conn().unwrap();
