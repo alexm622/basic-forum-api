@@ -118,7 +118,7 @@ pub mod insert{
         log::info!("adding comment to post {} for uid {}", comment.post, comment.user);
         let stmt = conn.prep("INSERT INTO comments (creator_id, post_id, parent_id, content, creation_date) VALUES(:uid, :post_id, :parent_id, :content, :date)")?;
         conn.exec_drop(&stmt, params!{
-            "creator_id" => comment.user,
+            "post_id" => comment.post,
             "date" => date,
             "content" => comment.contents.clone(),
             "uid" => comment.user,

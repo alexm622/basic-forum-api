@@ -52,7 +52,7 @@ pub mod create{
         
         let good_token:bool = get::verify_token(req.user_token.clone(), ip, req.user).unwrap();
         let good_post:bool = get::check_post(req.post).unwrap();
-        let good_parent:bool = get::check_post(req.parent).unwrap();
+        let good_parent:bool = get::check_comment(req.parent).unwrap();
         if good_token & good_parent & good_post{
             let comment_id:u64 = insert::create_comment(req).unwrap();
             res.redirect = Some(comment_id.to_string().to_owned());

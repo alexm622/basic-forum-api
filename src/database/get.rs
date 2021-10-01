@@ -82,7 +82,7 @@ pub mod get{
         let opts = Opts::from_url(URL).unwrap();
         let pool = Pool::new(opts).unwrap();
         let mut conn = pool.get_conn().unwrap();
-        let stmt = conn.prep("SELECT post_id FROM categories WHERE post_id = :id")?;
+        let stmt = conn.prep("SELECT post_id FROM posts WHERE post_id = :id")?;
         let res:Vec<u64> = conn.exec(stmt, params!{
             "id" => id,
         }).expect("Query failed.");
@@ -92,13 +92,16 @@ pub mod get{
             Ok(true)
         } 
     }
-    pub fn check_comment(id:String) -> Result<bool>{
+    pub fn check_comment(id:u64) -> Result<bool>{
         let opts = Opts::from_url(URL).unwrap();
         let pool = Pool::new(opts).unwrap();
         let mut conn = pool.get_conn().unwrap();
-        let stmt = conn.prep("SELECT comment_id FROM categories WHERE comment_id = :id")?;
+        if id == 0{
+            return Ok(true);
+        }
+        let stmt = conn.prep("SELECT comment_id FROM comments WHERE comment_id = :id")?;
         let res:Vec<u64> = conn.exec(stmt, params!{
-            "comment_id" => id,
+            "id" => id,
         }).expect("Query failed.");
         if res.len() == 0{
             Ok(false)
