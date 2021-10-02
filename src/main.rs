@@ -67,7 +67,12 @@ pub async fn post_test_handler (req: web::Json<Request>) -> HttpResponse {
  * 
  */
 pub async fn health_check_handler() ->  impl Responder {
-    HttpResponse::Ok().json("api server is running properly")
+    let resp:structs::responses::post::StatusResponse = structs::responses::post::StatusResponse{
+        redirect:None,
+        response_code:100
+    };
+    log::info!("returning the health of the api server");
+    HttpResponse::Ok().json(resp)
 }
 
 #[actix_rt::main]
