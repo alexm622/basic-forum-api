@@ -1,4 +1,4 @@
-use actix_web::{ App, HttpServer, web, HttpResponse, Responder, http::header};
+use actix_web::{ App, HttpServer, web, HttpResponse, Responder};
 use serde::{Serialize, Deserialize};
 use actix_cors::Cors;
 
@@ -92,10 +92,8 @@ async fn main() -> std::io::Result<()> {
     
     HttpServer::new(|| {
         let cors = Cors::new()
-            .allowed_origin("*")
-            .allowed_methods(vec!["GET", "POST"])
-            .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
-            .allowed_header(header::CONTENT_TYPE)
+        .supports_credentials()
+            .supports_credentials()
             .max_age(3600).finish();
 
         App::new()
