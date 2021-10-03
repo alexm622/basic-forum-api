@@ -1,5 +1,6 @@
-use actix_web::{ App, HttpServer, web, HttpResponse, Responder};
+use actix_web::{ App, HttpServer, web, HttpResponse, Responder, http::header};
 use serde::{Serialize, Deserialize};
+use actix_cors::Cors;
 
 extern crate simple_logger;
 use simple_logger::{SimpleLogger};
@@ -77,6 +78,13 @@ pub async fn health_check_handler() ->  impl Responder {
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
+    
+    let cors = Cors::default()
+    .allowed_origin("*/*")
+    .allowed_methods(vec!["GET", "POST"])
+    .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
+    .allowed_header(header::CONTENT_TYPE)
+    .max_age(3600);
 
     SimpleLogger::new()
     .with_level(LevelFilter::Error)

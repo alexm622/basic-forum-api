@@ -8,7 +8,6 @@ pub mod login{
     
     //handle a login post request
     pub async fn login_handler(json: web::Json<Login>,req: web::HttpRequest) -> HttpResponse {
-        
         log::info!("login handler");
         //get the remote ip address
         let ip = req.connection_info().remote().unwrap().to_owned();
@@ -33,7 +32,6 @@ pub mod login{
             ip:ip,
             username: uname
         };
-
         //add the user
         let out: String = insert::add_user(newuser).unwrap();
         
