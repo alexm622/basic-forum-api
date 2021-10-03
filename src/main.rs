@@ -79,12 +79,7 @@ pub async fn health_check_handler() ->  impl Responder {
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
     
-    let cors = Cors::default()
-    .allowed_origin("*/*")
-    .allowed_methods(vec!["GET", "POST"])
-    .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
-    .allowed_header(header::CONTENT_TYPE)
-    .max_age(3600);
+    
 
     SimpleLogger::new()
     .with_level(LevelFilter::Error)
@@ -96,8 +91,17 @@ async fn main() -> std::io::Result<()> {
 
     
     HttpServer::new(|| {
+        let cors = Cors::new()
+            .allowed_origin("*")
+            .allowed_methods(vec!["GET", "POST"])
+            .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
+            .allowed_header(header::CONTENT_TYPE)
+            .max_age(3600).finish();
+
         App::new()
+            .wrap(cors)
             .configure(general_routes)
+            
     })
         .workers(20)
         .keep_alive(15)

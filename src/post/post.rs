@@ -13,7 +13,7 @@ pub mod post{
         let newcat:MakeCat = json.into_inner();
 
         //get the user's ip
-        let ip = req.connection_info().remote().unwrap().to_owned();
+        let ip = req.connection_info().remote_addr().unwrap().to_owned();
         
         //try to create the category
         let response:StatusResponse = create::create_category(newcat, ip);
@@ -27,7 +27,7 @@ pub mod post{
         log::info!("make post");
         let newpost:MakePost = json.into_inner();
         //get the remote ip
-        let ip = req.connection_info().remote().unwrap().to_owned();
+        let ip = req.connection_info().remote_addr().unwrap().to_owned();
         //try to create a post
         let response:StatusResponse = create::create_post(newpost, ip);
 
@@ -40,7 +40,7 @@ pub mod post{
         log::info!("make comment");
         let newcomment:MakeComment = json.into_inner();
         //get the remote ip
-        let ip = req.connection_info().remote().unwrap().to_owned();
+        let ip = req.connection_info().remote_addr().unwrap().to_owned();
         //try to make the comment
         let response:StatusResponse = create::create_comment(newcomment, ip);
 

@@ -10,7 +10,7 @@ pub mod login{
     pub async fn login_handler(json: web::Json<Login>,req: web::HttpRequest) -> HttpResponse {
         log::info!("login handler");
         //get the remote ip address
-        let ip = req.connection_info().remote().unwrap().to_owned();
+        let ip = req.connection_info().remote_addr().unwrap().to_owned();
         //attempt to login
         let response:LoginResponse = login::login(json.into_inner(), ip);
         //return the response
@@ -24,7 +24,7 @@ pub mod login{
         let pw = json.pw.clone();
         let email = json.email.clone();
         //get the ip address
-        let ip = req.connection_info().remote().unwrap().to_owned();
+        let ip = req.connection_info().remote_addr().unwrap().to_owned();
 
         let newuser: database::NewUser = database::NewUser{
             email: email,
