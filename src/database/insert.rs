@@ -25,6 +25,7 @@ pub mod insert{
 
         let exists:bool = !(crate::database::get::get::check_uname(newuser.username.clone()).unwrap() && crate::database::get::get::check_email(newuser.email.clone()).unwrap());
         if exists {
+            log::info!("adding user failed");
             return Ok( NewUserResponse{response_code:400, outcome: false,token: None, uid: None})
         }
 
@@ -38,6 +39,7 @@ pub mod insert{
         let user: User = create::create_user(newuser.clone(), auth.auth_id, modrec.moderation_id);
 
         //prepare the sql statement
+        log::info!("adding new user");
         let stmt = conn.prep("INSERT INTO users (username,locale,auth_id, moderation_id) VALUES(:uname,:locale,:auth_id,:mod_id)")?;
         //execute the statement
         conn.exec_drop(&stmt, params!{
@@ -49,6 +51,7 @@ pub mod insert{
         let mut newtoken:bool;
         let mut token:String;
         let uid:u64 = conn.last_insert_id();
+        log::info!("generating token");
         while{
             //generate a new token
             token = create::generate_token(uid);
@@ -57,6 +60,7 @@ pub mod insert{
             //test to see if the token is original
             newtoken != true
         }{}
+        log::info!("token generated");
         let resp:NewUserResponse = NewUserResponse{response_code:100, outcome: conn.last_insert_id() > 0,token: Some(token), uid: Some(uid)};
 
         //return the userid
