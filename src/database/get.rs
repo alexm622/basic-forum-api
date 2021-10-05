@@ -170,7 +170,7 @@ pub mod get{
 
         //prepare the sql query
         let stmt = conn.prep("SELECT uname FROM auth WHERE uname = :uname")?;
-        let res:Vec<u64> = conn.exec(stmt, params!{
+        let res:Vec<String> = conn.exec(stmt, params!{
             "uname" => uname,
         }).expect("Query failed.");
 
@@ -190,7 +190,7 @@ pub mod get{
 
         //prepare the sql query
         let stmt = conn.prep("SELECT uname FROM auth WHERE email = :email")?;
-        let res:Vec<u64> = conn.exec(stmt, params!{
+        let res:Vec<String> = conn.exec(stmt, params!{
             "email" => email,
         }).expect("Query failed.");
 
