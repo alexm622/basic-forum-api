@@ -16,7 +16,7 @@ pub mod post{
     }
 
     #[derive(Serialize, Deserialize, Debug, Clone)]
-    pub struct NewUser{
+    pub struct NewUserResponse{
         pub response_code:u64,
         pub outcome :bool,
         pub uid: Option<u64>,
