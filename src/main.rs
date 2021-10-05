@@ -52,8 +52,8 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
     //auth
     cfg.service(web::resource("/login").route(web::post().to(post::auth::login::login_handler)));
     cfg.service(web::resource("/newuser").route(web::post().to(post::auth::login::new_user_handler)));
-    cfg.service(web::resource("/checkuname?uname={uname}").route(web::get().to(get::auth::login::check_uname)));
-    cfg.service(web::resource("/checkemail?email={email}").route(web::get().to(get::auth::login::check_uname)));
+    cfg.service(web::resource("/checkuname&uname={uname}").route(web::get().to(get::auth::login::check_uname)));
+    cfg.service(web::resource("/checkemail&email={email}").route(web::get().to(get::auth::login::check_uname)));
 
     //forum specific
     cfg.service(web::resource("/newpost").route(web::post().to(post::post::post::make_post)));
@@ -105,7 +105,7 @@ async fn main() -> std::io::Result<()> {
     })
         .workers(20)
         .keep_alive(15)
-        .bind("127.0.0.1:8080")?
+        .bind("0.0.0.0:8080")?
         .run()
         .await
 }
