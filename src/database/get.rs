@@ -174,7 +174,7 @@ pub mod get{
             "uname" => uname,
         }).expect("Query failed.");
 
-        //if post id does not exist return false, but if it exists then return true
+        //if username does not exist return false, but if it exists then return true
         if res.len() == 0{
             Ok(false)
         }else{

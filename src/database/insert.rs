@@ -23,6 +23,11 @@ pub mod insert{
         let pool = Pool::new(opts).unwrap();
         let mut conn = pool.get_conn().unwrap();
 
+        let exists:bool = !(crate::database::get::get::check_uname(newuser.username.clone()).unwrap() && crate::database::get::get::check_email(newuser.email.clone()).unwrap());
+        if(exists){
+            return Ok( NewUserResponse{response_code:400, outcome: false,token: None, uid: None})
+        }
+
         //create the auth entry for user
         let auth: Auth = create::create_auth(newuser.clone());
 
