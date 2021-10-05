@@ -176,9 +176,9 @@ pub mod get{
 
         //if post id does not exist return false, but if it exists then return true
         if res.len() == 0{
-            Ok(true)
-        }else{
             Ok(false)
+        }else{
+            Ok(true)
         } 
     }
     //check to see if email exists
@@ -196,9 +196,9 @@ pub mod get{
 
         //if post id does not exist return false, but if it exists then return true
         if res.len() == 0{
-            Ok(true)
-        }else{
             Ok(false)
+        }else{
+            Ok(true)
         } 
     }
 
