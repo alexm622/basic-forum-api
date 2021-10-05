@@ -8,14 +8,16 @@ pub mod insert{
     use crate::structs::user::user::User;
     use crate::auth::user::create;
     use crate::structs::requests::post::{MakeCat, MakeComment, MakePost};
+    use crate::structs::responses::post::NewUserResponse;
     use crate::utils::ip_tools::ip_tools;
+
 
     use std::time::SystemTime;
 
     const URL:&str = "mysql://server:serverpass@10.16.40.202:3306/forum";
 
     //create a new user
-    pub fn add_user(newuser: database::NewUser) -> Result<String>{//return userid
+    pub fn add_user(newuser: database::NewUser) -> Result<NewUserResponse>{//return userid
         //initialize connection
         let opts = Opts::from_url(URL).unwrap();
         let pool = Pool::new(opts).unwrap();
@@ -39,9 +41,21 @@ pub mod insert{
             "auth_id" => user.auth_id,
             "mod_id" => user.moderation_id,
         },).unwrap();
+        let mut newtoken:bool;
+        let mut token:String;
+        let uid:u64 = conn.last_insert_id();
+        while{
+            //generate a new token
+            token = create::generate_token(uid);
+            //check to see if the token is not a duplicate
+            newtoken = crate::database::get::get::check_token(token.clone(), user.auth_id, newuser.ip.clone()).unwrap();
+            //test to see if the token is original
+            newtoken != true
+        }{}
+        let resp:NewUserResponse = NewUserResponse{response_code:100, outcome: conn.last_insert_id() > 0,token: Some(token), uid: Some(uid)};
 
         //return the userid
-        Ok(conn.last_insert_id().to_string().to_owned())
+        Ok(resp)
     }
     //insert auth account for user
     pub fn add_auth(new_auth: &Auth) -> Result<u64>{

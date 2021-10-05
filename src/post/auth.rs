@@ -1,7 +1,7 @@
 pub mod login{
     use actix_web::{web, HttpResponse};
     use crate::structs::requests::post::{Login, NewUser};
-    use crate::structs::responses::post::{LoginResponse};
+    use crate::structs::responses::post::{LoginResponse, NewUserResponse};
     use crate::database::insert::insert;
     use crate::structs::database::database;
     use crate::auth::user::login;
@@ -33,8 +33,8 @@ pub mod login{
             username: uname
         };
         //add the user
-        let out: String = insert::add_user(newuser).unwrap();
+        let out: NewUserResponse = insert::add_user(newuser).unwrap();
         
-        HttpResponse::Ok().json(LoginResponse {outcome: false,login_token: Some(out), uid: None})
+        HttpResponse::Ok().json(out)
     }
 }
