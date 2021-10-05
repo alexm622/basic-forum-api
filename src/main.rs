@@ -53,7 +53,7 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(web::resource("/login").route(web::post().to(post::auth::login::login_handler)));
     cfg.service(web::resource("/newuser").route(web::post().to(post::auth::login::new_user_handler)));
     cfg.service(web::resource("/checkuname&uname={uname}").route(web::get().to(get::auth::login::check_uname)));
-    cfg.service(web::resource("/checkemail&email={email}").route(web::get().to(get::auth::login::check_uname)));
+    cfg.service(web::resource("/checkemail&email={email}").route(web::get().to(get::auth::login::check_email)));
 
     //forum specific
     cfg.service(web::resource("/newpost").route(web::post().to(post::post::post::make_post)));
