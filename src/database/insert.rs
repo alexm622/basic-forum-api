@@ -23,7 +23,7 @@ pub mod insert{
         let pool = Pool::new(opts).unwrap();
         let mut conn = pool.get_conn().unwrap();
 
-        let exists:bool = !(crate::database::get::get::check_uname(newuser.username.clone()).unwrap() || crate::database::get::get::check_email(newuser.email.clone()).unwrap());
+        let exists:bool = crate::database::get::get::check_uname(newuser.username.clone()).unwrap() || crate::database::get::get::check_email(newuser.email.clone()).unwrap();
         if exists {
             log::info!("adding user failed");
             return Ok( NewUserResponse{response_code:400, outcome: false,token: None, uid: None})
