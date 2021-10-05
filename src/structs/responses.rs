@@ -23,3 +23,12 @@ pub mod post{
         pub token: Option<String>,
     }
 }
+pub mod get{
+    use serde::{Deserialize, Serialize};
+
+
+    #[derive(Serialize, Deserialize, Debug, Clone)]
+    pub struct Exists{
+        pub exists:bool,
+    }
+}

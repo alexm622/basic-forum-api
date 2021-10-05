@@ -35,7 +35,7 @@ pub mod structs{
     pub mod database;
 }
 pub mod get{
-    
+    pub mod auth;
 }
 
 #[derive(Serialize, Deserialize)]
@@ -52,6 +52,7 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
     //auth
     cfg.service(web::resource("/login").route(web::post().to(post::auth::login::login_handler)));
     cfg.service(web::resource("/newuser").route(web::post().to(post::auth::login::new_user_handler)));
+    cfg.service(web::resource("/checkuname?uname={uname}").route(web::get().to(get::auth::login::check_uname)));
 
     //forum specific
     cfg.service(web::resource("/newpost").route(web::post().to(post::post::post::make_post)));

@@ -161,6 +161,47 @@ pub mod get{
             Ok(true)
         } 
     }
+    //check to see if uname exists
+    pub fn check_uname(uname:String) -> Result<bool>{
+        //initialize connection
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+
+        //prepare the sql query
+        let stmt = conn.prep("SELECT uname FROM auth WHERE uname = :uname")?;
+        let res:Vec<u64> = conn.exec(stmt, params!{
+            "uname" => uname,
+        }).expect("Query failed.");
+
+        //if post id does not exist return false, but if it exists then return true
+        if res.len() == 0{
+            Ok(true)
+        }else{
+            Ok(false)
+        } 
+    }
+    //check to see if email exists
+    pub fn check_email(email:String) -> Result<bool>{
+        //initialize connection
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+
+        //prepare the sql query
+        let stmt = conn.prep("SELECT uname FROM auth WHERE email = :email")?;
+        let res:Vec<u64> = conn.exec(stmt, params!{
+            "email" => email,
+        }).expect("Query failed.");
+
+        //if post id does not exist return false, but if it exists then return true
+        if res.len() == 0{
+            Ok(true)
+        }else{
+            Ok(false)
+        } 
+    }
+
 
     //check to see if comment with id exists
     pub fn get_pw_hash(aid:u64) -> Result<String>{

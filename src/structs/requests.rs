@@ -48,5 +48,15 @@ pub mod get{
         pub uid: u64,
         pub user_token: String, 
     }
+
+    #[derive(Serialize, Deserialize, Debug, Clone)]
+    pub struct UnameExistsCheck{
+        pub uname:String,
+    }
+
+    #[derive(Serialize, Deserialize, Debug, Clone)]
+    pub struct EmailExistsCheck{
+        pub email:String,
+    }
     
 }
