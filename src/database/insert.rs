@@ -126,9 +126,9 @@ pub mod insert{
         //execute statement
         conn.exec_drop(&stmt, params!{
             "token" => token,
-            "aid" => aid,
             "ip" => ip_tools::strip_port(ip),
             "date" => date,
+            "aid" => aid,
         },).unwrap();
         //return true
         Ok(true)
@@ -147,10 +147,10 @@ pub mod insert{
         let stmt = conn.prep("INSERT INTO categories (creator_id, cat_name, cat_desc, creation_date) VALUES(:uid, :name, :desc, :date)")?;
         //execute statement
         conn.exec_drop(&stmt, params!{
-            "date" => date,
-            "desc" => cat.desc.clone(),
             "uid" => cat.user,
             "name" => cat.name.clone(),
+            "desc" => cat.desc.clone(),
+            "date" => date,
         },).unwrap();
         //get cat id
         let cat_id:u64 = conn.last_insert_id();
@@ -170,11 +170,11 @@ pub mod insert{
         let stmt = conn.prep("INSERT INTO posts (creator_id, cat_id, content, name, creation_date) VALUES(:uid, :cat_id, :content, :name, :date)")?;
         //execute statement
         conn.exec_drop(&stmt, params!{
-            "cat_id" => post.cat,
-            "date" => date,
-            "content" => post.contents.clone(),
             "uid" => post.user,
+            "cat_id" => post.cat,
             "name" => post.name.clone(),
+            "content" => post.contents.clone(),
+            "date" => date,
         },).unwrap();
         //get the post id
         let post_id:u64 = conn.last_insert_id();
@@ -191,14 +191,15 @@ pub mod insert{
         let date = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
         log::info!("adding comment to post {} for uid {}", comment.post, comment.user);
         //prepare sql statement
-        let stmt = conn.prep("INSERT INTO comments (creator_id, post_id, parent_id, content, creation_date) VALUES(:uid, :post_id, :parent_id, :content, :date)")?;
+        let stmt = conn.prep("INSERT INTO comments (creator_id, post_id, parent_id, cat_id, content, creation_date) VALUES(:uid, :post_id, :parent_id, :cat_id, :content, :date)")?;
         //execute sql statement
         conn.exec_drop(&stmt, params!{
-            "post_id" => comment.post,
-            "date" => date,
-            "content" => comment.contents.clone(),
             "uid" => comment.user,
             "parent_id" => comment.parent,
+            "post_id" => comment.post,
+            "cat_id" => comment.cat_id,
+            "content" => comment.contents.clone(),
+            "date" => date,
         },).unwrap();
         //get comment id
         let comment_id:u64 = conn.last_insert_id();

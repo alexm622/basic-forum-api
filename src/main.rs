@@ -22,6 +22,7 @@ pub mod post{
 pub mod database{
     pub mod insert;
     pub mod get;
+    pub mod data;
 }
 pub mod structs{
     pub mod auth;
@@ -36,6 +37,7 @@ pub mod structs{
 }
 pub mod get{
     pub mod auth;
+    pub mod data;
 }
 
 #[derive(Serialize, Deserialize)]
@@ -56,9 +58,18 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(web::resource("/checkemail&email={email}").route(web::get().to(get::auth::login::check_email)));
 
     //forum specific
-    cfg.service(web::resource("/newpost").route(web::post().to(post::post::post::make_post)));
+
+    //create data
     cfg.service(web::resource("/newcategory").route(web::post().to(post::post::post::make_cat)));
+    cfg.service(web::resource("/newpost").route(web::post().to(post::post::post::make_post)));
     cfg.service(web::resource("/newcomment").route(web::post().to(post::post::post::make_comment)));
+
+    //get data
+    cfg.service(web::resource("/get/{offset}").route(web::get().to(get::data::data::get_categories)));
+    cfg.service(web::resource("/get/{offset}/{cat_id}").route(web::get().to(get::data::data::get_posts)));
+    cfg.service(web::resource("/get/{offset}/{cat_id}/{post_id}").route(web::get().to(get::data::data::get_comments_no_parent)));
+    cfg.service(web::resource("/get/{offset}/{cat_id}/{post_id}/{parent_id}").route(web::get().to(get::data::data::get_comments)));
+
 
 }
 

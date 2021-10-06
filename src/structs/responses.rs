@@ -25,10 +25,32 @@ pub mod post{
 }
 pub mod get{
     use serde::{Deserialize, Serialize};
+    use crate::structs::database::database::*;
 
 
     #[derive(Serialize, Deserialize, Debug, Clone)]
     pub struct Exists{
         pub exists:bool,
+    }
+
+    #[derive(Serialize, Deserialize, Debug, Clone)]
+    pub struct Comments{
+        pub has_results:bool,
+        pub num_results:Option<usize>,
+        pub results: Option<Vec<CommentInfo>>
+    }
+
+    #[derive(Serialize, Deserialize, Debug, Clone)]
+    pub struct Posts{
+        pub has_results:bool,
+        pub num_results:Option<usize>,
+        pub results: Option<Vec<PostInfo>>
+    }
+
+    #[derive(Serialize, Deserialize, Debug, Clone)]
+    pub struct Categories{
+        pub has_results:bool,
+        pub num_results:Option<usize>,
+        pub results: Option<Vec<CategoryInfo>>,
     }
 }
