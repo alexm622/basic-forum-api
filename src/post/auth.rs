@@ -5,6 +5,7 @@ pub mod login{
     use crate::database::insert::insert;
     use crate::structs::database::database;
     use crate::auth::user::login;
+    use crate::forum_actions::cleaner::cleaner;
     
     //handle a login post request
     pub async fn login_handler(json: web::Json<Login>,req: web::HttpRequest) -> HttpResponse {
@@ -20,7 +21,7 @@ pub mod login{
     //create a new user handler
     pub async fn new_user_handler(json: web::Json<NewUser>,req: web::HttpRequest) -> HttpResponse {
         log::info!("new user handler");
-        let uname = json.uname.clone();
+        let uname = cleaner::clean_full(json.uname.clone());
         let pw = json.pw.clone();
         let email = json.email.clone();
         //get the ip address

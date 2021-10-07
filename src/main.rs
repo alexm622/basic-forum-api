@@ -8,6 +8,7 @@ use log::LevelFilter;
 
 pub mod forum_actions{
     pub mod create;
+    pub mod cleaner;
 }
 pub mod utils{
     pub mod ip_tools;
@@ -101,8 +102,6 @@ async fn main() -> std::io::Result<()> {
     .with_module_level("actix", LevelFilter::Info)
     .init()
     .unwrap();
-
-
     
     HttpServer::new(|| {
         let cors = Cors::new()

@@ -16,14 +16,14 @@ pub mod login{
         if id.aid == 0{
             return response;
         }
-
+        
         //this doesnt verify password?
         let hash:String = get::get_pw_hash(id.aid).unwrap();
         let good_pw:bool = create::verify_pw(request.pw.clone(), hash);
         if !good_pw{
             return response;
         }
-
+        
         //token and test to see if token does not exist already
         let mut newtoken:bool;
         let mut token:String;
@@ -45,6 +45,7 @@ pub mod login{
 }
 
 pub mod create{
+    
     use crate::structs::database::database::NewUser;
     use crate::structs::auth::auth::Auth;
     use crate::structs::user::user::User;

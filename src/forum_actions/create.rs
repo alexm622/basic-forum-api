@@ -3,6 +3,7 @@ pub mod create{
     use crate::structs::requests::post::{MakeCat, MakeComment,MakePost};
     use crate::database::insert::insert;
     use crate::database::get::get;
+    use crate::forum_actions::cleaner::cleaner;
     use ammonia::clean;
 
     //create a new category
@@ -19,7 +20,7 @@ pub mod create{
         //if the token is good and the category does not exist create the category
         if good_token & !exists{
             req.desc = clean(&req.desc);
-            req.name = clean(&req.name);
+            req.name = cleaner::clean_full(req.name);
             let cat_id:u64 = insert::create_cat(req).unwrap();
             //set the status to have the cat id
             res.redirect = Some(cat_id.to_string().to_owned());
@@ -49,7 +50,7 @@ pub mod create{
 
         //if all tests pass create the post
         if good_token & good_parent{
-            req.contents = clean(&req.contents);
+            req.contents = cleaner::clean_full(req.contents);
             req.name = clean(&req.name);
             
             let post_id = insert::create_post(req).unwrap();
