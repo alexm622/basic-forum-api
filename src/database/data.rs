@@ -62,6 +62,33 @@ pub mod data{
         return Some(res);
         
     }
+    pub fn get_post(post_id: u64) -> Option<PostInfo>{
+        //create the connection
+        let opts = Opts::from_url(URL).unwrap();
+        let pool = Pool::new(opts).unwrap();
+        let mut conn = pool.get_conn().unwrap();
+
+        //create the statement
+        let stmt = conn.prep("select post_id,name,content,creation_date,creator_id from forum.posts WHERE post_id = :post_id").unwrap();
+
+        //query the server
+        let res:Vec<PostInfo> = conn.exec_map(stmt, params!{
+            "post_id" => post_id,
+        }, |(post_id, name, content, creator_id, creation_date)|
+            PostInfo{
+                post_id: post_id,
+                name: name,
+                content: content,
+                creator_id: creator_id,
+                creation_date: creation_date
+            }).expect("Query failed.");
+        if res.len() == 0{
+            return None;
+        }
+        return Some(res[0].clone());
+        
+    }
+
     pub fn get_comments(cat_id:u64, post_id:u64, parent_id:u64, offset: u64) -> Option<Vec<CommentInfo>>{
         //create the connection
         let opts = Opts::from_url(URL).unwrap();
@@ -90,4 +117,6 @@ pub mod data{
         return Some(res);
         
     }
+
+    
 }

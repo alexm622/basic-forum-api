@@ -71,6 +71,11 @@ pub mod get{
         pub offset:u64,
         pub cat_id:u64,
     }
+
+    #[derive(Serialize, Deserialize, Debug, Clone)]
+    pub struct GetPost{ //force user to use token eventually?
+        pub post_id:u64,
+    }
     
     #[derive(Serialize, Deserialize, Debug, Clone)]
     pub struct GetComments{ //force user to use token eventually?

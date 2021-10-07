@@ -48,6 +48,12 @@ pub mod get{
     }
 
     #[derive(Serialize, Deserialize, Debug, Clone)]
+    pub struct Post{
+        pub has_result:bool,
+        pub result: Option<PostInfo>,
+    }
+
+    #[derive(Serialize, Deserialize, Debug, Clone)]
     pub struct Categories{
         pub has_results:bool,
         pub num_results:Option<usize>,

@@ -1,7 +1,7 @@
 pub mod data{
     use actix_web::{web, HttpResponse};
-    use crate::structs::responses::get::{Categories,Posts,Comments};
-    use crate::structs::requests::get::{GetCategories,GetComments,GetPosts, GetCommentsNoParent};
+    use crate::structs::responses::get::{Categories,Posts,Comments,Post};
+    use crate::structs::requests::get::{GetCategories,GetComments,GetPosts, GetCommentsNoParent, GetPost};
     use crate::structs::database::database::{CategoryInfo,PostInfo,CommentInfo};
     use crate::database::data::data as sql_data;
     //get the categories
@@ -35,6 +35,21 @@ pub mod data{
             let results:Vec<PostInfo> = resp_vec.unwrap();
             response.has_results = true;
             response.num_results = Some(results.len());
+        }
+
+        HttpResponse::Ok().json(response)
+    }
+
+    //handle a username check request
+    pub async fn get_post(path: web::Path<GetPost>) -> HttpResponse {
+        log::info!("getting posts");
+        let resp:Option<PostInfo> = sql_data::get_post(path.post_id);
+        let mut response:Post = Post{
+            has_result: false,
+            result: resp.clone(),
+        };
+        if resp.is_some(){
+            response.has_result = true;
         }
 
         HttpResponse::Ok().json(response)
