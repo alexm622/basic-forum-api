@@ -3,9 +3,10 @@ pub mod create{
     use crate::structs::requests::post::{MakeCat, MakeComment,MakePost};
     use crate::database::insert::insert;
     use crate::database::get::get;
+    use ammonia::clean;
 
     //create a new category
-    pub fn create_category(req: MakeCat, ip:String)-> StatusResponse{
+    pub fn create_category(mut req: MakeCat, ip:String)-> StatusResponse{
         //create the status response
         let mut res:StatusResponse = StatusResponse{
             response_code: 1,
@@ -17,6 +18,8 @@ pub mod create{
         let exists:bool = get::cat_exists(req.name.clone()).unwrap();
         //if the token is good and the category does not exist create the category
         if good_token & !exists{
+            req.desc = clean(&req.desc);
+            req.name = clean(&req.name);
             let cat_id:u64 = insert::create_cat(req).unwrap();
             //set the status to have the cat id
             res.redirect = Some(cat_id.to_string().to_owned());
@@ -33,7 +36,7 @@ pub mod create{
     }
     
     //create a post
-    pub fn create_post(req: MakePost, ip:String)-> StatusResponse{
+    pub fn create_post(mut req: MakePost, ip:String)-> StatusResponse{
         //create the status response
         let mut res:StatusResponse = StatusResponse{
             response_code: 1,
@@ -46,6 +49,9 @@ pub mod create{
 
         //if all tests pass create the post
         if good_token & good_parent{
+            req.contents = clean(&req.contents);
+            req.name = clean(&req.name);
+            
             let post_id = insert::create_post(req).unwrap();
             res.redirect = Some(post_id.to_string().to_owned());
         }else{
@@ -60,7 +66,7 @@ pub mod create{
         return res;
     }
     //create a new comment
-    pub fn create_comment(req: MakeComment, ip:String) -> StatusResponse{
+    pub fn create_comment(mut req: MakeComment, ip:String) -> StatusResponse{
         let mut res:StatusResponse = StatusResponse{
             response_code: 1,
             redirect: None,
@@ -74,6 +80,7 @@ pub mod create{
 
         //if all tests pass then create comment
         if good_token & good_parent & good_post{
+            req.contents = clean(&req.contents);
             let comment_id:u64 = insert::create_comment(req).unwrap();
             //return the comment id in status
             res.redirect = Some(comment_id.to_string().to_owned());
