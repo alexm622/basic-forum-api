@@ -42,7 +42,7 @@ pub mod data{
         let mut conn = pool.get_conn().unwrap();
 
         //create the statement
-        let stmt = conn.prep("select post_id,name,content,creation_date,creator_id from forum.posts WHERE is_archived = 0 AND is_deleted = 0 AND cat_id = :cat_id ORDER BY creation_date DESC LIMIT 10 OFFSET :offset;").unwrap();
+        let stmt = conn.prep("select post_id,name,content,creation_date,creator_id from forum.posts WHERE is_archived = 0 AND is_deleted = 0 AND cat_id = :cat_id ORDER BY creation_date DESC LIMIT 5 OFFSET :offset;").unwrap();
 
         //query the server
         let res:Vec<PostInfo> = conn.exec_map(stmt, params!{
@@ -96,7 +96,7 @@ pub mod data{
         let mut conn = pool.get_conn().unwrap();
 
         //create the statement
-        let stmt = conn.prep("select comment_id,content,creation_date,creator_id from forum.comments WHERE is_archived = 0 AND is_deleted = 0 AND post_id = :post_id AND cat_id = :cat_id AND parent_id = :parent_id ORDER BY creation_date DESC LIMIT 10 OFFSET :offset").unwrap();
+        let stmt = conn.prep("select comment_id,content,creator_id,creation_date from forum.comments WHERE is_archived = 0 AND is_deleted = 0 AND post_id = :post_id AND cat_id = :cat_id AND parent_id = :parent_id ORDER BY creation_date DESC LIMIT 10 OFFSET :offset").unwrap();
 
         //query the server
         let res:Vec<CommentInfo> = conn.exec_map(stmt, params!{
