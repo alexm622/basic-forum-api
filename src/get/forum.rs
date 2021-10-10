@@ -4,10 +4,10 @@ use crate::structs::requests::get::CatExistsCheck;
 use crate::database::get;
 
 //handle a username check request
-pub async fn check_uname(path: web::Path<CatExistsCheck>) -> HttpResponse {
-    log::info!("uname check handler");
+pub async fn check_cat(path: web::Path<CatExistsCheck>) -> HttpResponse {
+    log::info!("category check handler");
     //get the remote ip address
-    let exists:bool = get::check_cat_str(path.cat.to_owned()).unwrap();
+    let exists:bool = get::cat_exists(path.cat.to_owned()).unwrap();
     let response:Exists = Exists{
         exists: exists,
     };

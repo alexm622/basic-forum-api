@@ -62,7 +62,7 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
     //forum specific
 
     //check if category exists
-    cfg.service(web::resource("/checkcat").route(web::get().to(post::post::make_cat)));
+    cfg.service(web::resource("/checkcat&cat={cat}").route(web::get().to(get::forum::check_cat)));
     
 
     //create data

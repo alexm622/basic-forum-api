@@ -93,28 +93,6 @@ pub fn check_cat(id:u64) -> Result<bool>{
         Ok(true)
     } 
 }
-//check to see if category exists
-pub fn check_cat_str(name:String) -> Result<bool>{
-    //initialize connection
-    let opts = Opts::from_url(URL).unwrap();
-    let pool = Pool::new(opts).unwrap();
-    let mut conn = pool.get_conn().unwrap();
-
-    //prepare sql query
-    let stmt = conn.prep("SELECT cat_id FROM categories WHERE name = :name")?;
-
-    //query database to see if category id exists
-    let res:Vec<u64> = conn.exec(stmt, params!{
-        "name" => name,
-    }).expect("Query failed.");
-    //if it does not exist return false
-    //if it does exist return true
-    if res.len() == 0{
-        Ok(false)
-    }else{
-        Ok(true)
-    } 
-}
 //check to see if a category exists
 pub fn cat_exists(name:String) -> Result<bool>{
     //initialize connection
