@@ -2,7 +2,7 @@ pub mod login{
     use actix_web::{web, HttpResponse};
     use crate::structs::responses::get::Exists;
     use crate::structs::requests::get::{UnameExistsCheck, EmailExistsCheck};
-    use crate::database::get::get;
+    use crate::database::get;
     
     //handle a username check request
     pub async fn check_uname(path: web::Path<UnameExistsCheck>) -> HttpResponse {

@@ -1,9 +1,9 @@
 pub mod create{
     use crate::structs::responses::post::StatusResponse;
     use crate::structs::requests::post::{MakeCat, MakeComment,MakePost};
-    use crate::database::insert::insert;
-    use crate::database::get::get;
-    use crate::forum_actions::cleaner::cleaner;
+    use crate::database::insert;
+    use crate::database::get;
+    use crate::forum_actions::cleaner;
     use ammonia::clean;
 
     //create a new category

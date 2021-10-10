@@ -39,6 +39,7 @@ pub mod structs{
 pub mod get{
     pub mod auth;
     pub mod data;
+    pub mod forum;
 }
 
 #[derive(Serialize, Deserialize)]
@@ -60,17 +61,21 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
 
     //forum specific
 
+    //check if category exists
+    cfg.service(web::resource("/checkcat").route(web::get().to(post::post::make_cat)));
+    
+
     //create data
-    cfg.service(web::resource("/newcategory").route(web::post().to(post::post::post::make_cat)));
-    cfg.service(web::resource("/newpost").route(web::post().to(post::post::post::make_post)));
-    cfg.service(web::resource("/newcomment").route(web::post().to(post::post::post::make_comment)));
+    cfg.service(web::resource("/newcategory").route(web::post().to(post::post::make_cat)));
+    cfg.service(web::resource("/newpost").route(web::post().to(post::post::make_post)));
+    cfg.service(web::resource("/newcomment").route(web::post().to(post::post::make_comment)));
 
     //get data
-    cfg.service(web::resource("/get/bulk/{offset}").route(web::get().to(get::data::data::get_categories)));
-    cfg.service(web::resource("/get/bulk/{offset}/{cat_id}").route(web::get().to(get::data::data::get_posts)));
-    cfg.service(web::resource("/get/bulk/{offset}/{cat_id}/{post_id}").route(web::get().to(get::data::data::get_comments_no_parent)));
-    cfg.service(web::resource("/get/bulk/{offset}/{cat_id}/{post_id}/{parent_id}").route(web::get().to(get::data::data::get_comments)));
-    cfg.service(web::resource("/get/single/{post_id}").route(web::get().to(get::data::data::get_post)));
+    cfg.service(web::resource("/get/bulk/{offset}").route(web::get().to(get::data::get_categories)));
+    cfg.service(web::resource("/get/bulk/{offset}/{cat_id}").route(web::get().to(get::data::get_posts)));
+    cfg.service(web::resource("/get/bulk/{offset}/{cat_id}/{post_id}").route(web::get().to(get::data::get_comments_no_parent)));
+    cfg.service(web::resource("/get/bulk/{offset}/{cat_id}/{post_id}/{parent_id}").route(web::get().to(get::data::get_comments)));
+    cfg.service(web::resource("/get/single/{post_id}").route(web::get().to(get::data::get_post)));
 
 
 }

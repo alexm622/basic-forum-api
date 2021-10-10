@@ -2,10 +2,10 @@ pub mod login{
     use actix_web::{web, HttpResponse};
     use crate::structs::requests::post::{Login, NewUser};
     use crate::structs::responses::post::{LoginResponse, NewUserResponse};
-    use crate::database::insert::insert;
-    use crate::structs::database::database;
+    use crate::database::insert;
+    use crate::structs::database;
     use crate::auth::user::login;
-    use crate::forum_actions::cleaner::cleaner;
+    use crate::forum_actions::cleaner;
     
     //handle a login post request
     pub async fn login_handler(json: web::Json<Login>,req: web::HttpRequest) -> HttpResponse {

@@ -2,8 +2,8 @@ pub mod login{
     use crate::structs::responses::post::{LoginResponse};
     use crate::structs::requests::post::Login;
     use crate::auth::user::create;
-    use crate::database::get::get;
-    use crate::structs::database::database::IdInfo;
+    use crate::database::get;
+    use crate::structs::database::IdInfo;
     
     //handle a login post request
     pub fn login(request: Login, ip:String) -> LoginResponse{
@@ -46,11 +46,11 @@ pub mod login{
 
 pub mod create{
     
-    use crate::structs::database::database::NewUser;
-    use crate::structs::auth::auth::Auth;
-    use crate::structs::user::user::User;
-    use crate::structs::moderation::moderation::ModerationRecord;
-    use crate::database::insert::insert;
+    use crate::structs::database::NewUser;
+    use crate::structs::auth::Auth;
+    use crate::structs::user::User;
+    use crate::structs::moderation::ModerationRecord;
+    use crate::database::insert;
     use bcrypt::{DEFAULT_COST, hash, verify};
     use std::time::SystemTime;
     use sha256::digest;

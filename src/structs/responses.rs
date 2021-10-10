@@ -25,7 +25,7 @@ pub mod post{
 }
 pub mod get{
     use serde::{Deserialize, Serialize};
-    use crate::structs::database::database::*;
+    use crate::structs::database::*;
 
 
     #[derive(Serialize, Deserialize, Debug, Clone)]

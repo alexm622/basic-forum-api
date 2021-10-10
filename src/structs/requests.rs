@@ -60,6 +60,11 @@ pub mod get{
         pub email:String,
     }
 
+    #[derive(Serialize, Deserialize, Debug, Clone)]
+    pub struct CatExistsCheck{
+        pub cat:String,
+    }
+
     
     #[derive(Serialize, Deserialize, Debug, Clone)]
     pub struct GetCategories{ //force user to use token eventually?
