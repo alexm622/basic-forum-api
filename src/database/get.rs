@@ -104,7 +104,7 @@ pub fn cat_exists(name:String) -> Result<bool>{
     let stmt = conn.prep("SELECT cat_name FROM categories WHERE cat_name = :name")?;
 
     //query the server
-    let res:Vec<u64> = conn.exec(stmt, params!{
+    let res:Vec<String> = conn.exec(stmt, params!{
         "name" => name,
     }).expect("Query failed.");
 
