@@ -50,8 +50,8 @@ pub mod create{
 
         //if all tests pass create the post
         if good_token & good_parent{
-            req.contents = cleaner::clean_full(req.contents);
-            req.name = clean(&req.name);
+            req.name = cleaner::clean_full(req.name);
+            req.contents = clean(&req.contents);
             
             let post_id = insert::create_post(req).unwrap();
             res.redirect = Some(post_id.to_string().to_owned());
